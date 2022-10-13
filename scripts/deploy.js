@@ -7,10 +7,12 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import { defaultAbiCoder as abi } from "@ethersproject/abi";
 dotenv.config();
 
-const Contract = JSON.parse(fs.readFileSync(
-  "./out/LensHumanRaffle.sol/LensHumanRaffle.json",
-  { encoding: "utf8", flag: "r" }
-));
+const Contract = JSON.parse(
+  fs.readFileSync("./out/LensHumanRaffle.sol/LensHumanRaffle.json", {
+    encoding: "utf8",
+    flag: "r",
+  })
+);
 
 let validConfig = true;
 if (process.env.RPC_URL === undefined) {
@@ -42,8 +44,14 @@ async function main() {
         abi.encode(Contract.abi[0].inputs, inputs),
       ])
     ),
-    gasPrice: 60000000000,
   });
+
+  // ANCHOR: code to settle the raffle
+  // let tx = await wallet.sendTransaction({
+  //   to: '0x24BbDbA114DA81429D84752d9226b18D16FCBCC4',
+  //   data: '0x11da60b4',
+  //   gasPrice: 60000000000,
+  // });
 
   spinner.text = `Waiting for deploy transaction (tx: ${tx.hash})`;
   tx = await tx.wait();
